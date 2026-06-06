@@ -27,7 +27,7 @@ const NAV_ITEMS = [
 ];
 
 export default function Layout({ children, activeTab, onTabChange }: LayoutProps) {
-  const { currentUser, switchUser, refreshData, alerts } = useData();
+  const { user, switchUser, refreshData, alerts, logout } = useData();
   const pendingAlerts = alerts.filter(a => a.status === 'pending' || a.status === 'escalated').length;
 
   return (
@@ -98,10 +98,12 @@ export default function Layout({ children, activeTab, onTabChange }: LayoutProps
               <Users className="w-4 h-4 text-slate-400" />
               <span className="text-sm text-slate-300">权限切换:</span>
               <select
-                value={currentUser.id}
+                value={user?.id || ''}
                 onChange={e => {
-                  const user = USERS.find(u => u.id === e.target.value);
-                  if (user) switchUser(user);
+                  const u = USERS.find(x => x.id === e.target.value);
+                  if (u) {
+                    switchUser(u);
+                  }
                 }}
                 className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-water-500"
               >
@@ -115,12 +117,19 @@ export default function Layout({ children, activeTab, onTabChange }: LayoutProps
 
             <div className="flex items-center gap-3 px-4 py-2 bg-slate-700/50 rounded-lg">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-water-400 to-water-600 flex items-center justify-center text-white text-sm font-bold">
-                {currentUser.name.charAt(0)}
+                {user?.name?.charAt(0) || 'U'}
               </div>
               <div className="text-sm">
-                <div className="text-white font-medium">{currentUser.name}</div>
-                <div className="text-slate-400 text-xs">{getUserLevelText(currentUser.level)}</div>
+                <div className="text-white font-medium">{user?.name}</div>
+                <div className="text-slate-400 text-xs">{getUserLevelText(user?.level || 'headquarters')}</div>
               </div>
+              <button
+                onClick={logout}
+                className="ml-2 p-1.5 text-slate-400 hover:text-white hover:bg-slate-600 rounded"
+                title="退出登录"
+              >
+                退出
+              </button>
             </div>
           </div>
         </header>

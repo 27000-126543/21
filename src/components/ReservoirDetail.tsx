@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   X,
   Droplets,
@@ -29,7 +29,12 @@ interface Props {
 }
 
 export default function ReservoirDetail({ reservoirId, onClose }: Props) {
-  const { reservoirs, waterQualityStations, rainfallStations, pumpStations, waterLevelHistory, waterQualityHistory } = useData();
+  const { reservoirs, waterQualityStations, rainfallStations, pumpStations, waterLevelHistory, waterQualityHistory, loadWaterLevelHistory, loadWaterQualityHistory } = useData();
+
+  useEffect(() => {
+    loadWaterLevelHistory(reservoirId);
+    loadWaterQualityHistory(reservoirId);
+  }, [reservoirId, loadWaterLevelHistory, loadWaterQualityHistory]);
 
   const reservoir = reservoirs.find(r => r.id === reservoirId);
   const waterQuality = waterQualityStations.find(q => q.reservoirId === reservoirId);

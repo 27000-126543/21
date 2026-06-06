@@ -33,7 +33,7 @@ export default function Dashboard({ onReservoirClick }: { onReservoirClick: (id:
   const {
     filteredReservoirs,
     waterQualityStations,
-    currentUser,
+    user,
   } = useData();
 
   const [selectedBasin, setSelectedBasin] = useState<Basin | 'all'>('all');
@@ -41,9 +41,9 @@ export default function Dashboard({ onReservoirClick }: { onReservoirClick: (id:
   const [basinDropdownOpen, setBasinDropdownOpen] = useState(false);
 
   const availableBasins = useMemo(() => {
-    if (currentUser.level === 'headquarters') return ALL_BASINS;
-    return currentUser.basin ? [currentUser.basin] : ALL_BASINS;
-  }, [currentUser]);
+    if (!user || user.level === 'headquarters') return ALL_BASINS;
+    return user.basin ? [user.basin] : ALL_BASINS;
+  }, [user]);
 
   const displayReservoirs = useMemo(() => {
     if (selectedBasin === 'all') return filteredReservoirs;

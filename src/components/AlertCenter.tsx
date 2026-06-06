@@ -31,7 +31,7 @@ export default function AlertCenter() {
     filteredReservoirs,
     alerts,
     approvals,
-    currentUser,
+    user,
     waterLevelHistory,
     addAlert,
     updateAlert,
@@ -98,8 +98,8 @@ export default function AlertCenter() {
   };
 
   const handleApprove = (approval: Approval, level: 1 | 2 | 3, approve: boolean) => {
-    if (!canApproveLevel(currentUser, level)) return;
-    const updated = approveLevel(approval, level, currentUser, approve);
+    if (!user || !canApproveLevel(user, level)) return;
+    const updated = approveLevel(approval, level, user, approve);
     updateApproval(updated);
     setSelectedApproval(updated);
 
@@ -339,7 +339,7 @@ export default function AlertCenter() {
                         )}
                         {selectedApproval.currentLevel === item.level &&
                           item.status === 'pending' &&
-                          canApproveLevel(currentUser, item.level) && (
+                          user && canApproveLevel(user, item.level) && (
                           <div className="mt-3 pl-8 flex gap-2">
                             <button
                               onClick={() => handleApprove(selectedApproval, item.level, true)}
